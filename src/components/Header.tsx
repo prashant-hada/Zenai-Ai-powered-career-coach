@@ -1,4 +1,4 @@
-import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import { SignInButton, SignUpButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -27,11 +27,11 @@ export default function Header() {
             alt="logo-img"
             width={200}
             height={60}
-            className="h-12 py-1 w-auto obje"
+            className="h-12 py-1 w-auto object-contain"
           />
         </Link>
 
-        <div className="flex items-center space-x-2 md: space-x-4">
+        <div className="flex items-center space-x-2 md:space-x-4">
           <SignedIn>
             <Link href={"/dashboard"}>
               <Button variant={"outline"}>
@@ -77,6 +77,9 @@ export default function Header() {
             <SignInButton>
               <Button variant={'outline'}> Sign In</Button>
             </SignInButton>
+            <SignUpButton>
+              <Button>Sign Up</Button>
+            </SignUpButton>
           </SignedOut>
           <SignedIn>
             <UserButton 
