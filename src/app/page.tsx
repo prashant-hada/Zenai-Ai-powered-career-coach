@@ -1,9 +1,13 @@
-import { Button } from "@/components/ui/button";
+import HeroSection from "@/components/HeroSection";
 
 export default function Home() {
   return (
-    <div className="">
-      <Button>Hello</Button>
+    <div className="relative min-h-screen w-full">
+    <div className="grid-background">
     </div>
-  );
+    <div className="w-full absolute top-0 left-0">
+      <HeroSection />
+    </div>
+    </div>
+  )
 }
