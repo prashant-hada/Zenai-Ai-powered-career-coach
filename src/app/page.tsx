@@ -1,4 +1,6 @@
+import FAQs from "@/components/FAQs";
 import Features from "@/components/Features";
+import Footer from "@/components/Footer";
 import HeroSection from "@/components/HeroSection";
 import HowItWorks from "@/components/HowItWorks";
 import Stats from "@/components/Stats";
@@ -15,6 +17,8 @@ export default function Home() {
       <Stats />
       <HowItWorks />
       <Testimonial />
+      <FAQs />
+      <Footer />
     </div>
     </div>
   )
