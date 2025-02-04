@@ -1,3 +1,4 @@
+import Features from "@/components/Features";
 import HeroSection from "@/components/HeroSection";
 
 export default function Home() {
@@ -7,6 +8,7 @@ export default function Home() {
     </div>
     <div className="w-full absolute top-0 left-0">
       <HeroSection />
+      <Features />
     </div>
     </div>
   )
