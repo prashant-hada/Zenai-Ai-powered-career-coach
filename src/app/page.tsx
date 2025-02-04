@@ -1,6 +1,8 @@
 import Features from "@/components/Features";
 import HeroSection from "@/components/HeroSection";
+import HowItWorks from "@/components/HowItWorks";
 import Stats from "@/components/Stats";
+import Testimonial from "@/components/Testimonial";
 
 export default function Home() {
   return (
@@ -11,6 +13,8 @@ export default function Home() {
       <HeroSection />
       <Features />
       <Stats />
+      <HowItWorks />
+      <Testimonial />
     </div>
     </div>
   )
