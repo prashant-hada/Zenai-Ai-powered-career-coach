@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
-// import Footer from "@/components/Footer";
+import Footer from "@/components/Footer";
 import Header from "@/components/Header";
-import {ClerkProvider} from '@clerk/nextjs'
+import { ClerkProvider } from "@clerk/nextjs";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,24 +28,29 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-    <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      <html lang="en" suppressHydrationWarning>
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
-      <ThemeProvider
+          <ThemeProvider
             attribute="class"
             defaultTheme="system"
             enableSystem
             disableTransitionOnChange
-            >
-            {/* header */}
-            <Header />
-            <main className="min-h-screen"> {children}</main>
-            {/* footer */}
-            {/* <Footer /> */}
+          >
+            <div className="flex flex-col min-h-screen">
+              {/* Header */}
+              <Header />
+
+              {/* Main Content */}
+              <main className="flex-1">{children}</main>
+
+              {/* Footer */}
+              <Footer />
+            </div>
           </ThemeProvider>
-      </body>
-    </html>
+        </body>
+      </html>
     </ClerkProvider>
   );
 }
