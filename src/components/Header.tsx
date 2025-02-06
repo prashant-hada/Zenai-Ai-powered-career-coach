@@ -16,19 +16,26 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { checkUser } from "@/lib/checkUser";
 
-export default function Header() {
+export default async function Header() {
+  // await checkUser();
   return (
     <header className="fixed top-0 w-full border-b bg-background/80 backdrop-blur-md z-50 supports-[backdrop-filter]:bg-background/60">
       <nav className="container mx-auto px-4 h-16 flex items-center justify-between">
         <Link href="/">
-          <Image
+          {/* <Image
             src="/logo.png"
             alt="logo-img"
             width={200}
             height={60}
             className="h-12 py-1 w-auto object-contain"
-          />
+          /> */}
+          <h2 className=" text-3xl md:text-4xl font-semibold font-[Helvetica]">zen
+            <span className="text-purple-600">a</span>
+            <span className="text-purple-600">i</span>
+            
+            </h2>
         </Link>
 
         <div className="flex items-center space-x-2 md:space-x-4">
