@@ -3,7 +3,7 @@ import { currentUser } from "@clerk/nextjs/server";
 import { db } from "../lib/prisma";
 
 export const checkUser = async () => {
-    try {
+    try {   
   const user = await currentUser();
 
   if (!user) {
@@ -11,10 +11,13 @@ export const checkUser = async () => {
     return null;
   }
 
-  if (!user.id) {
+  if (!user?.id) {
     console.error("User ID is missing in Clerk user object:", user);
     return null;
   }
+
+  console.log("User: ", user);
+  
 
     const loggedInUser = await db.user.findUnique({
       where: {
@@ -40,6 +43,6 @@ export const checkUser = async () => {
 
     return newUser;
   } catch (error) {
-    console.log(error);
+    console.log("error: ", error);
   }
 };
