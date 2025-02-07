@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import { ClerkProvider } from "@clerk/nextjs";
 import { ProviderWrapper } from "@/provider/ProviderWrapper";
+import { Toaster } from "@/components/ui/sonner"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -40,7 +41,7 @@ export default function RootLayout({
 
               {/* Main Content */}
               <main className="flex-1">{children}</main>
-
+              <Toaster richColors />
               {/* Footer */}
               <Footer />
             </div>
