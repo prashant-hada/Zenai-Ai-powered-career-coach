@@ -29,7 +29,7 @@ export const checkUser = async () => {
       return loggedInUser;
     }
 
-    const name = `${user.firstName} ${user.lastName}`;
+    const name = [user.firstName, user.lastName].filter(Boolean).join(" ") || "Unknown User";
     // console.log("name: ", name);
     const newUser = await db.user.create({
       data: {
@@ -43,6 +43,7 @@ export const checkUser = async () => {
 
     return newUser;
   } catch (error) {
-    console.log("error: ", error);
+    console.error("Error in checkUser:", error);
+    return null;
   }
 };
