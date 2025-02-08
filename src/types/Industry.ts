@@ -7,7 +7,7 @@ export default interface Industry {
 export interface IndustryInsight {
   id?: string;
   industry?: string;
-  salaryRange?: object[];
+  salaryRange?:{ role: string; min: number; max: number; median: number; location: string }[];
   growthRate?: number;
   demandLevel: string;
   topSkills?: string[];

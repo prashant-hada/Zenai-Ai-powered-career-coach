@@ -11,29 +11,55 @@ const model = genAI.getGenerativeModel({
 
 export const generateInsightByAI = async (industry: string) => {
   try {
-    const prompt = `
-    Analyze the current state of the ${industry} industry and provide insights in ONLY the following JSON format without any additional notes or explanations:
-    {
-      "salaryRanges": [
-        { "role": "string", "min": number, "max": number, "median": number, "location": "string" }
-      ],
-      "growthRate": number,
-      "demandLevel": "HIGH" | "MEDIUM" | "LOW",
-      "topSkills": ["skill1", "skill2"],
-      "marketOutlook": "POSITIVE" | "NEUTRAL" | "NEGATIVE",
-      "keyTrends": ["trend1", "trend2"],
-      "recommendedSkills": ["skill1", "skill2"]
-    }
+  //   const prompt = `
+  //   Analyze the current state of the ${industry} industry and provide insights in ONLY the following JSON format without any additional notes or explanations:
+  //   {
+  //     "salaryRanges": [
+  //       { "role": "string", "min": number, "max": number, "median": number, "location": "string" }
+  //     ],
+  //     "growthRate": number,
+  //     "demandLevel": "HIGH" | "MEDIUM" | "LOW",
+  //     "topSkills": ["skill1", "skill2"],
+  //     "marketOutlook": "POSITIVE" | "NEUTRAL" | "NEGATIVE",
+  //     "keyTrends": ["trend1", "trend2"],
+  //     "recommendedSkills": ["skill1", "skill2"]
+  //   }
     
-    IMPORTANT: Return ONLY the JSON. No additional text, notes, or markdown formatting.
-    Include at least 5 common roles for salary ranges.
-    Growth rate should be a percentage.
-    Include at least 5 skills and trends.
-  `;
+  //   IMPORTANT: Return ONLY the JSON with values corresponding to all keys mentioned. No additional text, notes, or markdown formatting.
+  //   IMPORTANT: Include at least 5 common roles for salary ranges.
+  //   Growth rate should be a percentage.
+  //   Include at least 5 skills and trends.
+  // `;
 
+  const prompt = `Provide a JSON structure containing information about the current state of the ${industry} industry.  The JSON should *only* contain the following keys and adhere to these specific data types and constraints.  Do not include any explanatory text outside of the JSON.  Ensure *all* fields have valid, realistic values.
+
+json
+{
+  "salaryRange": [
+    { "role": "string", "min": "number (integer, minimum 0)", "max": "number (integer, minimum min)", "median": "number (integer, min <= median <= max)", "location": "string" },
+    { "role": "string", "min": "number (integer, minimum 0)", "max": "number (integer, minimum min)", "median": "number (integer, min <= median <= max)", "location": "string" },
+    { "role": "string", "min": "number (integer, minimum 0)", "max": "number (integer, minimum min)", "median": "number (integer, min <= median <= max)", "location": "string" },
+    { "role": "string", "min": "number (integer, minimum 0)", "max": "number (integer, minimum min)", "median": "number (integer, min <= median <= max)", "location": "string" },
+    { "role": "string", "min": "number (integer, minimum 0)", "max": "number (integer, minimum min)", "median": "number (integer, min <= median <= max)", "location": "string" }
+  ],
+  "growthRate": "number (percentage, 0-100)",
+  "demandLevel": "string (one of: 'HIGH', 'MEDIUM', 'LOW')",
+  "topSkills": ["string", "string", "string", "string", "string"],
+  "marketOutlook": "string (one of: 'POSITIVE', 'NEUTRAL', 'NEGATIVE')",
+  "keyTrends": ["string", "string", "string", "string", "string"],
+  "recommendedSkills": ["string", "string", "string", "string", "string"]
+}
+
+  IMPORTANT: Return ONLY the JSON with values corresponding to all keys mentioned. No additional text, notes, or markdown formatting.
+  IMPORTANT: Include at least 5 common roles for salary ranges.
+  Growth rate should be a percentage.
+  Include at least 5 skills and trends.
+
+` ;
     const result = await model.generateContent(prompt);
     const response = result?.response;
     const text = response?.text();
+    // console.log("AI TExt: ", text)
 
     //Text response by gemini would not just contain h=the json data, but could have some unneccessary string part above it and below it as well, thus we need to clean it first.
     const cleanedText = text.replace(/```(?:json)?\n?/g, "").trim();
@@ -92,6 +118,8 @@ export const generateDashBoardInsights = async () => {
       });
       return industryInsight;
     }
+
+    return userData.industryInsight;
   } catch (error) {
     console.error(
       "Error generating industry insights: ",

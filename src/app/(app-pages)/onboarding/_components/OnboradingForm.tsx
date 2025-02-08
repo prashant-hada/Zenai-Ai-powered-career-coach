@@ -184,7 +184,7 @@ const OnboradingForm = ({ industries }: OnboradingFormProps) => {
             </div>
 
             <div className=" space-y-2">
-              <Label htmlFor="bio">Skills</Label>
+              <Label htmlFor="bio">Bio</Label>
               <Textarea
                 placeholder="Tell us about your professional experience"
                 className="h-32"
