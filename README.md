@@ -141,7 +141,7 @@ Zenai uses Prisma to interact with a PostgreSQL database. Below is a brief overv
 - **ER Diagram:**  
   Dan ER diagram that better show the relation between different entiry of this system to better help you out under stand the flow.
 
-  ![ER-Diagram]("")
+  ![ER-Diagram]()
 
 -----
 
@@ -153,3 +153,8 @@ Zenai uses Prisma to interact with a PostgreSQL database. Below is a brief overv
   Integrate visually engaging charts and detailed reports to track interview and application progress.
 - **Additional AI Features:**  
   Expand the capabilities of the AI tools to provide more personalized recommendations for resumes and cover letters.
+
+---
+## Contributing
+
+Contributions are welcome! Please feel free to submit issues or pull requests to help improve Zenai. For major changes, open an issue first to discuss what you would like to change.
