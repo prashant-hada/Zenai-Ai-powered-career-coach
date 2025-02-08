@@ -28,10 +28,7 @@ export async function updateUser(data){
            //if not exist, then create new entry in DB
            if (!industryInsight) {
              const insights = await generateInsightByAI(data.industry);
-             console.dir(insights);
-             // if ( typeof insights !== "object") {
-             //     throw new Error("Generated insights are invalid");
-             // }
+            
              industryInsight = await tx.industryInsight.create({
                data: {
                  industry: data.industry,
@@ -43,7 +40,7 @@ export async function updateUser(data){
                  keyTrends: insights.keyTrends,
                  recommendedSkills: insights.recommendedSkills,
                  lastUpdated: insights.lastUpdated,
-                 nextUpdate: new Date(Date.now() + 7 * 24 * 60 * 60 * 100),
+                 nextUpdate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
                },
              });
            }

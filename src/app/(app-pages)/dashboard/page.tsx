@@ -1,13 +1,18 @@
 import { getUserOnboardingStatus } from '@/actions/user';
 import { redirect } from 'next/navigation';
 import React from 'react'
+import DashboardView from './_components/DashboardView';
+import { generateDashBoardInsights } from '@/actions/insights';
 
 const DashboardPage = async() => {
-  //Check if user is onboarded or not
     const {isOnboarded} = await getUserOnboardingStatus();
     if(!isOnboarded) {redirect('/onboarding')}
+
+    const insights = await generateDashBoardInsights();
   return (
-    <div>DashboardPage</div>
+    <div>
+      <DashboardView insights={insights} />
+    </div>
   )
 }
 

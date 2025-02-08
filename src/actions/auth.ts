@@ -16,7 +16,7 @@ export const checkUser = async () => {
     return null;
   }
 
-  console.log("User: ", user);
+  // console.log("User: ", user);
   
 
     const loggedInUser = await db.user.findUnique({
