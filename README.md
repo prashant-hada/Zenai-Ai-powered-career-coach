@@ -11,6 +11,7 @@
 - [Tech Stack](#tech-stack)
 - [Setup & Installation](#setup--installation)
 - [Database Schema & Backend Logic](#database-schema--backend-logic)
+- [E-R Representation](#e-r-representation)
 - [Future Enhancements](#future-enhancements)
 - [Contributing](#contributing)
 <!-- - [License](#license) -->
@@ -139,9 +140,9 @@ Zenai uses Prisma to interact with a PostgreSQL database. Below is a brief overv
 
 ## E-R Representation
 - **ER Diagram:**  
-  Dan ER diagram that better show the relation between different entiry of this system to better help you out under stand the flow.
+  An ER diagram that better show the relationship between different entities of this system to better help you out under stand the flow.
 
-  ![ER-Diagram]()
+  ![ER-Diagram](https://github.com/prashant-hada/Zenai-Ai-powered-career-coach/blob/main/public/erd.png?raw=true)
 
 -----
 
