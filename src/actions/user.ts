@@ -1,6 +1,7 @@
 'use server'
 import { auth } from "@clerk/nextjs/server"
 import { db } from "@/lib/prisma"
+import { generateInsightByAI } from "./insights"
 
 export async function updateUser(data){
     try {
@@ -25,21 +26,27 @@ export async function updateUser(data){
             }
            });
            //if not exist, then create new entry in DB
-           if(!industryInsight){
-            industryInsight = await tx.industryInsight.create({
-                data:{
-                    industry:data.industry,
-                    salaryRange:[],
-                    growthRate:0,
-                    demandLevel:'MEDIUM',
-                    topSkills:[],
-                    marketOutlook:"NEUTRAL",
-                    keyTrends:[],
-                    recommendedSkills:[],
-                    nextUpdate:new Date(Date.now() + 7*24*60*60*1000) //1 week from now
-                }
-            })
-        }
+           if (!industryInsight) {
+             const insights = await generateInsightByAI(data.industry);
+             console.dir(insights);
+             // if ( typeof insights !== "object") {
+             //     throw new Error("Generated insights are invalid");
+             // }
+             industryInsight = await tx.industryInsight.create({
+               data: {
+                 industry: data.industry,
+                 salaryRange: insights.salaryRange,
+                 growthRate: insights?.growthRate,
+                 demandLevel: insights.demandLevel,
+                 topSkills: insights.topSkills,
+                 marketOutlook: insights.marketOutlook,
+                 keyTrends: insights.keyTrends,
+                 recommendedSkills: insights.recommendedSkills,
+                 lastUpdated: insights.lastUpdated,
+                 nextUpdate: new Date(Date.now() + 7 * 24 * 60 * 60 * 100),
+               },
+             });
+           }
             const user = await tx.user.update({
                 where:{
                     id:userData.id,
