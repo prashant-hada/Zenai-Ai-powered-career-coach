@@ -124,13 +124,13 @@ body {
 }
 
 .hero-image{
-  transform: rotateX(22deg) scale(1);
+  transform: rotateX(15deg) scale(1);
   transition: transform 0.8s ease-in-out;
   will-change: transform;
 }
 
 .hero-image.scrolled{
-  transform: rotateX(0deg) scale(1) translateY(40px);
+  transform: rotateX(0deg) scale(1) translateY(10px);
 }
 
 @keyframes gradientMotion {
