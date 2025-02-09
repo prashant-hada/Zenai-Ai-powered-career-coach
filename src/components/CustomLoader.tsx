@@ -1,10 +1,11 @@
+'use client'
 import React from 'react'
-import {PropagateLoader} from 'react-spinners'
+import {BarLoader} from 'react-spinners'
 
-const CustomLoader = ({message}:{message?:string}) => {
+const CustomLoader = ({message, width, height, color}:{message?:string, width?:string, height?:number, color?:string}) => {
   return (
-    <div className='flex flex-col justify-center items-start mx-auto space-y-4'>
-        <PropagateLoader className='mt-5' size={20} color='gray' loading={true} />
+    <div className='flex flex-col justify-center items-center space-y-10'>
+        <BarLoader className='mt-5' width={width?width:1000} height={height?height:8} color={`${color?color:"gray"}`}/>
         <p>
             { (!message || message==='')?'Loading...':message}
         </p>
