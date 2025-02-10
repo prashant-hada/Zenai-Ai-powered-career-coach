@@ -165,7 +165,7 @@ const Quiz = () => {
           className="ml-auto"
         >
             {savingResult && (
-            <Loader2 className="mt-4"/>
+            <Loader2 className="h-4 w-4 animate-spin"/>
           )}
           {currentQuestion < quizData.length - 1
             ? "Next Question"
