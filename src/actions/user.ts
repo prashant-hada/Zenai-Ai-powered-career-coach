@@ -3,7 +3,14 @@ import { auth } from "@clerk/nextjs/server"
 import { db } from "@/lib/prisma"
 import { generateInsightByAI } from "./insights"
 
-export async function updateUser(data){
+interface UpdateData{
+    industry:string;
+    skills: string[];
+    bio:string;
+    experience:number;
+}
+
+export async function updateUser(data:UpdateData){
     try {
         const {userId} = await auth()
         if(!userId) throw new Error('Unauthorized');

@@ -1,7 +1,5 @@
-// import { IndustryInsight } from '@/types/Industry'
 'use client'
-import { Brain, Briefcase,LineChart, TrendingDown, TrendingUp } from "lucide-react";
-// import React, { ForwardRefExoticComponent } from "react";
+import { BarChartIcon, Brain, Briefcase,LineChart, TrendingDown, TrendingUp } from "lucide-react";
 import { format, formatDistanceToNow } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -41,22 +39,22 @@ const DashboardView = ({ insights }) =>
       }
     };
 
-    const getMarketOutlookInfo = (outlook:string) => {
+    const getMarketOutlookInfo = ((outlook:string) => {
       switch (outlook.toLowerCase()) {
         case "positive":
-          return { icon: TrendingUp, color: "text-green-500" };
-        case "positive":
-          return { icon: LineChart, color: "text-yellow-500" };
-        case "positive":
-          return { icon: TrendingDown, color: "text-red-500" };
+          return <TrendingUp className="h-4 w-4 text-green-500" />
+        case "neutral":
+          return <LineChart className="h-4 w-4 text-yellow-500" />
+        case "negative":
+          return <TrendingDown className="h-4 w-4 text-red-500" />
         case "default":
-          return { icon: LineChart, color: "text-gray-500" };
+          return <LineChart className="h-4 w-4 text-gray-500" />
       }
-    };
+    })
 
     const demandLevelColor = getDemandLevelColor(insights.demandLevel);
-    const OutlookIcon = getMarketOutlookInfo(insights.marketOutlook)?.icon;
-    const outlookColor = getMarketOutlookInfo(insights.marketOutlook)?.color;
+    // const OutlookIcon = getMarketOutlookInfo(insights.marketOutlook)?.icon;
+    // const outlookColor = getMarketOutlookInfo(insights.marketOutlook)?.color;
 
     const lastUpdateDate = format(new Date(insights.lastUpdated), "dd/MM/yyyy");
     const nextUpdateRemainingTime = formatDistanceToNow(
@@ -76,7 +74,9 @@ const DashboardView = ({ insights }) =>
               <CardTitle className="text-sm font-medium">
                 Market Outlook
               </CardTitle>
-              <OutlookIcon className={`h-4 w-4 ${outlookColor}`} />
+              {
+                getMarketOutlookInfo(insights?.marketOutlook || 'neutral')
+              }
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{insights.marketOutlook}</div>
@@ -91,7 +91,7 @@ const DashboardView = ({ insights }) =>
               <CardTitle className="text-sm font-medium">
                 Industry Growth
               </CardTitle>
-              <TrendingUp className={`h-4 w-4 text-muted-foreground `} />
+              <BarChartIcon className={`h-4 w-4 text-muted-foreground `} />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{insights.growthRate.toFixed(1)}%</div>

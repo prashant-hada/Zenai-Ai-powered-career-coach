@@ -1,6 +1,7 @@
 'use server'
 
 import { db } from "@/lib/prisma"
+import { AnsweredQuestion, Question } from "@/types/interview";
 import { auth } from "@clerk/nextjs/server"
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
@@ -60,7 +61,7 @@ export async function generateQuiz() {
           );
     }
 }
-export async function saveQuizResult(questions, answers, score:number) {
+export async function saveQuizResult(questions:Question[], answers:string[], score:number) {
 
     try {
         const {userId} = await auth();
@@ -81,12 +82,12 @@ export async function saveQuizResult(questions, answers, score:number) {
     }))
 
     //collecting wrong answers for generating improvement tips
-    const wrongAnswers = questionResults.filter((ques)=> !ques.isCorrect);
+    const wrongAnswers = questionResults.filter((ques:AnsweredQuestion)=> !ques.isCorrect);
 
     // generate improvemnet tip if there are any wrong answers
     let improvementsTip ="";
     if(wrongAnswers.length > 0){
-        const wrongQuestionsInputString = wrongAnswers.map((q)=> `Question: "${q.question}"\nCorrect Answer: "${q.answer}"\nUser Answer: "${q.userAnswer}"`).join("\n\n");
+        const wrongQuestionsInputString = wrongAnswers.map((q:AnsweredQuestion)=> `Question: "${q.question}"\nCorrect Answer: "${q.answer}"\nUser Answer: "${q.userAnswer}"`).join("\n\n");
         
         const improvementPrompt = `
       The user got the following ${user.industry} technical interview questions wrong:
@@ -120,4 +121,32 @@ export async function saveQuizResult(questions, answers, score:number) {
         console.error("Error saving quiz result:", error);
         throw new Error("Failed to save quiz result"); 
     }
+}
+
+export const getAssessments = async()=>{
+  try {
+    const { userId } = await auth();
+  if (!userId) throw new Error("Unauthorized");
+
+  const user = await db.user.findUnique({
+    where: { clerkUserId: userId },
+  });
+
+  if (!user) throw new Error("User not found");
+
+  const assessments = await db.assessment.findMany({
+    where: {
+      userId: user.id,
+    },
+    orderBy: {
+      createdAt: "asc",
+    },
+  });
+
+  return assessments;
+    
+  } catch (error) {
+    console.error("Error fetching assessments:", error);
+    throw new Error("Failed to fetch assessments");
+  }
 }
