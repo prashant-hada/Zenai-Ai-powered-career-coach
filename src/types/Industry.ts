@@ -5,16 +5,16 @@ export default interface Industry {
 }
 
 export interface IndustryInsight {
-  id?: string;
-  industry?: string;
-  salaryRange?:{ role: string; min: number; max: number; median: number; location: string }[];
-  growthRate?: number;
+  // id?: string;
+  industry: string;
+  salaryRange:{ role: string; min: number; max: number; median: number; location: string }[];
+  growthRate: number;
   demandLevel: string;
-  topSkills?: string[];
+  topSkills: string[];
   marketOutlook?: string;
-  keyTrends?: string[];
-  recommendedSkills?: string[];
+  keyTrends: string[];
+  recommendedSkills: string[];
   createdAt?: Date;
-  lastUpdated?: Date;
-  nextUpdate?: Date;
+  lastUpdated: Date;
+  nextUpdate: Date;
 }

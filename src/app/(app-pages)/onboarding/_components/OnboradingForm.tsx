@@ -32,9 +32,9 @@ import { updateUser } from "@/actions/user";
 interface OnboradingFormProps {
   industries: Industry[];
 }
-// interface UpdateData{
-//   success:boolean;
-// }
+interface UpdateData{
+  success:boolean;
+}
 
 const OnboradingForm = ({ industries }: OnboradingFormProps) => {
   const [selectedIndusty, setSelectedIndusty] = useState<Industry | null>(null);

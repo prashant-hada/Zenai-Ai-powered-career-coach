@@ -11,12 +11,13 @@ import {
 } from "@/components/ui/card";
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis} from 'recharts'
 import { Progress } from "@/components/ui/progress";
+import { IndustryInsight } from "@/types/Industry";
 
 interface Range{
     role: string; min: number; max: number; median: number; location: string 
 }
 
-const DashboardView = ({ insights }) =>
+const DashboardView = ({ insights }:{insights:IndustryInsight}) =>
   // :{insights:IndustryInsight}
   {
     const salaryData = insights?.salaryRange.map((range:Range) => ({
