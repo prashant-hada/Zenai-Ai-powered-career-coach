@@ -6,11 +6,11 @@ export interface Question {
 }
 
 export interface AnsweredQuestion {
-    question?: string;
-    answer?:string;
-    explanation?: string
-    userAnswer?: string
-    isCorrect?: boolean
+    question: string;
+    answer:string;
+    explanation: string
+    userAnswer: string
+    isCorrect: boolean
 }
 
 export interface Assessment {

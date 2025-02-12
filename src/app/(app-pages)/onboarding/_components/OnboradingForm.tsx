@@ -28,6 +28,7 @@ import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { updateUser } from "@/actions/user";
+import { FormData } from "@/types/User";
 
 interface OnboradingFormProps {
   industries: Industry[];
@@ -44,7 +45,7 @@ const OnboradingForm = ({ industries }: OnboradingFormProps) => {
     loading: updateLoading,
     funct: updateUserFunct,
     data: updateResult,
-  } = useFetch(updateUser);
+  } = useFetch<UpdateData, [FormData]>(updateUser);
 
   const {
     register,
@@ -64,8 +65,11 @@ const OnboradingForm = ({ industries }: OnboradingFormProps) => {
             .replace(/ /g,"-");
 
         await updateUserFunct({
-            ...values, industry:formattedIndustry
-        })
+          skills:values.skills, 
+          industry:formattedIndustry,
+          bio:values.bio,
+          experience: values.experience
+      })
     } catch (error) {
         console.error('Onboarding Error: ',error);
     }

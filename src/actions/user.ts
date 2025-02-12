@@ -2,15 +2,14 @@
 import { auth } from "@clerk/nextjs/server"
 import { db } from "@/lib/prisma"
 import { generateInsightByAI } from "./insights"
+import User, { FormData } from "@/types/User";
 
-interface UpdateData{
-    industry:string;
-    skills: string[];
-    bio:string;
-    experience:number;
+interface UpdateUserResponse{
+    user: User;
+    success:boolean
 }
 
-export async function updateUser(data:UpdateData){
+export async function updateUser(data:FormData):Promise<UpdateUserResponse>{
     try {
         const {userId} = await auth()
         if(!userId) throw new Error('Unauthorized');
@@ -65,7 +64,7 @@ export async function updateUser(data:UpdateData){
            return {user, industryInsight}
         },{timeout:10000})
 
-        return {success:true, ...result}
+        return {success:true, user:result.user}
         
     } catch (error) {
         console.error("Error updating user and industry: ", (error as Error).message);
