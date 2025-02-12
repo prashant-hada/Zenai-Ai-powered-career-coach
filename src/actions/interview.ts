@@ -1,7 +1,7 @@
 'use server'
 
 import { db } from "@/lib/prisma"
-import { AnsweredQuestion, Question } from "@/types/interview";
+import { AnsweredQuestion, Assessment, Question } from "@/types/interview";
 import { auth } from "@clerk/nextjs/server"
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
@@ -61,7 +61,7 @@ export async function generateQuiz() {
           );
     }
 }
-export async function saveQuizResult(questions:Question[], answers:string[], score:number) {
+export async function saveQuizResult(questions:Question[], answers:string[], score:number): Promise<Assessment> {
 
     try {
         const {userId} = await auth();
@@ -106,7 +106,7 @@ export async function saveQuizResult(questions:Question[], answers:string[], sco
     console.log(improvementsTip);
     }
 
-    const assessment = db.assessment.create({
+    const assessment = await db.assessment.create({
         data:{
             userId: user.id,
             quizScore: score,
@@ -115,7 +115,24 @@ export async function saveQuizResult(questions:Question[], answers:string[], sco
             improvementsTip
         }
     })
-    return assessment;
+    // return assessment;
+    return {
+      id: assessment.id,
+      
+    userId: assessment.id,
+    quizScore: assessment.quizScore,
+    questions: (assessment.questions as unknown as AnsweredQuestion[]).map((question)  => ({
+      question: question.question || '',
+      answer: question.answer || '',
+      explanation: question.explanation || '',
+      userAnswer: question.userAnswer || '',
+      isCorrect: question.isCorrect || false
+  })),
+    category:assessment.category,
+    improvementsTip:String(assessment.improvementsTip),
+    createdAt: assessment.createdAt,
+    updatedAt: assessment.updatedAt,
+    }
         
     } catch (error) {
         console.error("Error saving quiz result:", error);

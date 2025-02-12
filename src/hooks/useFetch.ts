@@ -2,12 +2,13 @@ import {useState } from "react";
 import { toast } from "sonner"
 
 
-const useFetch= (action)=>{
-    const [data, setData] = useState(undefined);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const useFetch=  <T, A extends any[]>(action: (...args: A) => Promise<T>)=>{
+    const [data, setData] = useState<T | undefined |null>(undefined);
     const [loading, setLoading] = useState<boolean>(false);
-    const [error, setError] = useState(null);
+    const [error, setError] = useState<Error|null>(null);
 
-    const funct = async(...args)=>{
+    const funct = async(...args:A)=>{
         setLoading(true);
         setError(null);
 
@@ -16,7 +17,7 @@ const useFetch= (action)=>{
             setData(response);
             setError(null);
         } catch (error) {
-            setError(error);
+            setError(error as Error);
             toast.error((error as Error).message)   
         }
         finally{

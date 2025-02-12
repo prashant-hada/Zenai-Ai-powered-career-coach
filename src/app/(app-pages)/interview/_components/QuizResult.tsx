@@ -8,7 +8,7 @@ import { Assessment } from "@/types/interview";
 
 interface QuizResultProps{
   result:Assessment;
-  hideStartNew:boolean;
+  hideStartNew?:boolean;
   onStartNew:()=>void
 }
 

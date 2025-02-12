@@ -11,3 +11,10 @@ export default interface User {
     createdAt?: Date;
     updatedAt?: Date;
   }
+
+  export interface FormData{
+    industry:string;
+    skills: string[];
+    bio:string;
+    experience:number;
+  }

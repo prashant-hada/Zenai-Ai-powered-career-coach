@@ -10,6 +10,7 @@ import { Loader2 } from 'lucide-react'
 import React, {useState, useEffect} from 'react'
 import { toast } from 'sonner'
 import QuizResult from './QuizResult'
+import { AnsweredQuestion, Assessment, Question } from '@/types/interview'
 
 const Quiz = () => {
     const [currentQuestion, setCurrentQuestion] = useState<number>(0);
@@ -27,7 +28,7 @@ const Quiz = () => {
         funct: saveQuizResultFn,
         data: resultData,
         setData: setResultData,
-      } = useFetch(saveQuizResult);
+      } = useFetch<Assessment ,[Question[] , string[] , number]>(saveQuizResult);
 
     useEffect(()=>{
         if(quizData && quizData.length > 0){
@@ -66,7 +67,7 @@ const Quiz = () => {
           await saveQuizResultFn(quizData, answers, score);
           toast.success("Quiz completed!");
         } catch (error) {
-          toast.error(error.message || "Failed to save quiz results");
+          toast.error((error as Error).message || "Failed to save quiz results");
         }
       };
 
@@ -86,9 +87,13 @@ const Quiz = () => {
 
      // Show results if quiz is completed
   if (resultData) {
+    const formattedResultData = {
+      ...resultData,
+      questions: resultData.questions as unknown as AnsweredQuestion[]
+    }
     return (
       <div className="mx-2">
-        <QuizResult result={resultData} onStartNew={startNewQuiz} />
+        <QuizResult result={formattedResultData} onStartNew={startNewQuiz} />
       </div>
     );
   }
@@ -132,7 +137,7 @@ const Quiz = () => {
           value={answers[currentQuestion]}
           className="space-y-2"
         >
-          {question.options.map((option, index:number) => (
+          {question.options.map((option:string, index:number) => (
             <div key={index} className="flex items-center space-x-2">
               <RadioGroupItem value={option} id={`option-${index}`} />
               <Label htmlFor={`option-${index}`}>{option}</Label>
