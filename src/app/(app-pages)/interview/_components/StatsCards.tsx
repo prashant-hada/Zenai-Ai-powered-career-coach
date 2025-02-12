@@ -1,9 +1,11 @@
 'use client'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Assessment } from '@/types/interview';
 import { Brain, Target, Trophy } from 'lucide-react';
 import React from 'react'
 
-const StatsCards = ({assessments}) => {
+
+const StatsCards = ({assessments}:{assessments:Assessment[]}) => {
 
     const getAverageScore = ()=>{
         if(!assessments?.length) return 0;

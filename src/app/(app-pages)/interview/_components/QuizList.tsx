@@ -12,11 +12,12 @@ import {
   } from "@/components/ui/dialog"
 import QuizResult from './QuizResult';
 import { EyeIcon } from 'lucide-react';
+import { Assessment } from '@/types/interview';
   
 
-const QuizList = ({ assessments }) => {
+const QuizList = ({ assessments }:{assessments:Assessment[]}) => {
   const router = useRouter();
-  const [selectedQuiz, setSelectedQuiz] = useState(null);
+  const [selectedQuiz, setSelectedQuiz] = useState<Assessment|null>(null);
   return (
     <div>
       <Card>
@@ -82,7 +83,7 @@ const QuizList = ({ assessments }) => {
     <DialogHeader>
       <DialogTitle> </DialogTitle>
       <QuizResult 
-      result={selectedQuiz}
+      result={selectedQuiz as Assessment}
         hideStartNew
         onStartNew={() => router.push("/interview/mock")}
             />

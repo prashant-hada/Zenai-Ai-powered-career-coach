@@ -39,7 +39,7 @@ export async function updateUser(data:UpdateData){
              industryInsight = await tx.industryInsight.create({
                data: {
                  industry: data.industry,
-                 salaryRange: insights.salaryRange,
+                 salaryRange: JSON.parse(JSON.stringify(insights.salaryRange)) , 
                  growthRate: insights?.growthRate,
                  demandLevel: insights.demandLevel,
                  topSkills: insights.topSkills,

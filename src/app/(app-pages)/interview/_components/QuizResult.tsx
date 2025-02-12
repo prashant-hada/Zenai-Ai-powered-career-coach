@@ -4,20 +4,14 @@ import { Trophy, CheckCircle2, XCircle, BarChartIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CardContent, CardFooter } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { AnsweredQuestion } from "@/types/interview";
+import { Assessment } from "@/types/interview";
 
 interface QuizResultProps{
-  result:Result;
+  result:Assessment;
   hideStartNew:boolean;
   onStartNew:()=>void
 }
 
-interface Result{
-  quizScore:number;
-  improvementsTip:string;
-  questions: AnsweredQuestion[];
-
-}
 
 export default function QuizResult({
   result,
