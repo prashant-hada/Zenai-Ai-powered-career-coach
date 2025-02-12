@@ -1,5 +1,6 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import {NextResponse } from "next/server";
+import { getUserOnboardingStatus } from "./actions/user";
 
 const protectedRoutes = createRouteMatcher([
   '/dashboard(.*)',
@@ -11,6 +12,7 @@ const protectedRoutes = createRouteMatcher([
 export default clerkMiddleware(async(auth, req )=>{
   const {userId} = await auth();
   const url = req.nextUrl;
+  const { isOnboarded } = await getUserOnboardingStatus();
 
   // Redirect for the root route '/'
   if (url.pathname === '/') {
@@ -19,6 +21,16 @@ export default clerkMiddleware(async(auth, req )=>{
       return NextResponse.redirect(new URL('/landing', req.url));
     }
     // If logged in, redirect to /dashboard
+    return NextResponse.redirect(new URL('/dashboard', req.url));
+  }
+
+  // If not onboarded and not already on onboarding, redirect to onboarding
+  if (!isOnboarded && !url.pathname.startsWith('/onboarding')) {
+    return NextResponse.redirect(new URL('/onboarding', req.url));
+  }
+
+  // If onboarded and on onboarding route, redirect to dashboard
+  if (isOnboarded && url.pathname.startsWith('/onboarding')) {
     return NextResponse.redirect(new URL('/dashboard', req.url));
   }
 
