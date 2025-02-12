@@ -27,15 +27,15 @@ const HeroSection = () => {
   }, []);
 
   return (
-    <section className=" z-10 pt-36 md:pt-42 pb-10">
+    <section className=" z-10 pt-16 md:pt-28 pb-10">
       <div className=" space-y-6 text-center flex flex-col items-center justify-center">
         <div className=" space-y-6 mx-auto flex flex-col items-center justify-center">
-          <h1 className="text-3xl font-bold md:text-5xl lg:text-7xl gradient-title">
+          <h1 className="text-2xl font-bold md:text-5xl lg:text-7xl gradient-title">
             Your Ai Career Coach for
             <br />
             Professional Success
           </h1>
-          <p className="mx-auto max-w[600px] text-muted-foreground md:text-xl md:mx-[450px]">
+          <p className="mx-auto max-w[600px] text-muted-foreground text-sm md:text-xl md:mx-[150px] lg:mx-[250px]">
             Advance your career with personalized guidance, interview prep, and
             AI-powered tools for jobs success.
           </p>
