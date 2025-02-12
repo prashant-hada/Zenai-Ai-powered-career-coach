@@ -1,5 +1,6 @@
 "use server";
 import { db } from "@/lib/prisma";
+import { Insight } from "@/types/Industry";
 // import { IndustryInsight } from "@/types/Industry";
 import { auth } from "@clerk/nextjs/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
@@ -9,7 +10,7 @@ const model = genAI.getGenerativeModel({
   model: "gemini-1.5-flash",
 });
 
-export const generateInsightByAI = async (industry: string) => {
+export const generateInsightByAI = async (industry: string) : Promise<Insight>=> {
   try {
   //   const prompt = `
   //   Analyze the current state of the ${industry} industry and provide insights in ONLY the following JSON format without any additional notes or explanations:
@@ -69,8 +70,26 @@ json
       throw new Error("Parsed data is not an object");
     }
 
+    // return {
+    //   salaryRange: parsedData.salaryRange || [],
+    //   growthRate: parsedData.growthRate || 0,
+    //   demandLevel: parsedData.demandLevel || "MEDIUM",
+    //   topSkills: parsedData.topSkills || [],
+    //   marketOutlook: parsedData.marketOutlook || "POSITIVE",
+    //   keyTrends: parsedData.keyTrends || [],
+    //   recommendedSkills: parsedData.recommendedSkills || [],
+    //   lastUpdated: new Date(),
+    // };
+
     return {
-      salaryRange: parsedData.salaryRange || [],
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      salaryRange: (parsedData.salaryRange || []).map((range: any) => ({
+        role: String(range.role),
+        min: Number(range.min),
+        max: Number(range.max),
+        median: Number(range.median),
+        location: String(range.location),
+      })),
       growthRate: parsedData.growthRate || 0,
       demandLevel: parsedData.demandLevel || "MEDIUM",
       topSkills: parsedData.topSkills || [],
@@ -81,7 +100,16 @@ json
     };
   } catch (error) {
     console.error("Error generating industry insights:", error);
-    return {}; // Return an empty object to prevent `undefined` spread error
+    return {
+      salaryRange: [],
+      growthRate: 0,
+      demandLevel: "MEDIUM",
+      topSkills: [],
+      marketOutlook: "POSITIVE",
+      keyTrends: [],
+      recommendedSkills: [],
+      lastUpdated: new Date(),
+    }; // Return an empty object to prevent `undefined` spread error
   }
 };
 
@@ -105,7 +133,7 @@ export const generateDashBoardInsights = async () => {
       const industryInsight = db.industryInsight.create({
         data: {
           industry: String(userData.industry),
-          salaryRange: insights.salaryRange, 
+          salaryRange: JSON.parse(JSON.stringify(insights.salaryRange)) , 
           growthRate: insights?.growthRate,
           demandLevel: insights.demandLevel,
           topSkills: insights.topSkills,

@@ -12,3 +12,14 @@ export interface AnsweredQuestion {
     userAnswer?: string
     isCorrect?: boolean
 }
+
+export interface Assessment {
+    id:string;
+    userId: string;
+    quizScore: number;
+    questions: AnsweredQuestion[];
+    category:string;
+    improvementsTip:string;
+    createdAt: Date;
+    updatedAt: Date;
+}
