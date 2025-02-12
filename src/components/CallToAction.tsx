@@ -15,7 +15,7 @@ export const CallToAction = () => {
             Join thousands of proffesionals who are advancing their careers with AI powered guidance
           </p>
           <Link href={'/onboarding'}>
-          <Button size='lg' variant={'secondary'} className='h-14 mt-5 animate-bounce text-xl'>
+          <Button size='lg' variant={'secondary'} className=' text-lg h-14 mt-5 animate-bounce md:text-xl'>
           Start Your Journey Today <ArrowRight className='ml-2 h-4 w-4' />
           </Button>
           </Link>
