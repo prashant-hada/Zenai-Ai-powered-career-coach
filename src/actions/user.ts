@@ -3,6 +3,7 @@ import { auth } from "@clerk/nextjs/server"
 import { db } from "@/lib/prisma"
 import { generateInsightByAI } from "./insights"
 import User, { FormData } from "@/types/User";
+import { cookies } from "next/headers";
 
 interface UpdateUserResponse{
     user: User;
@@ -95,4 +96,22 @@ export async function getUserOnboardingStatus() {
         throw new Error('Failed to check onboarding status');
     }
     
+}
+
+export async function checkOnboardingStatus() {
+    try{
+    const isOnboardedCookie = (await cookies()).get("isOnboarded")?.value;
+    if(isOnboardedCookie) return {isOnboarded: isOnboardedCookie === 'true'};
+    
+    const isOnboarded = await getUserOnboardingStatus();
+    if(isOnboarded){
+        (await cookies()).set('isOnboarded', 'true', { maxAge: 60 * 60 * 24 * 7 })
+    }
+
+    return {isOnboarded};
+    }
+    catch (error) {
+        console.error("Error checking onboarding status: ", (error as Error).message);
+        return { isOnboarded: false }; // Fail-safe: Treat as not onboarded
+    }  
 }

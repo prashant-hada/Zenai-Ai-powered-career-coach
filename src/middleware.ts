@@ -1,6 +1,6 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import {NextResponse } from "next/server";
-import { getUserOnboardingStatus } from "./actions/user";
+// import { getUserOnboardingStatus } from "./actions/user";
 
 const protectedRoutes = createRouteMatcher([
   '/dashboard(.*)',
@@ -9,10 +9,58 @@ const protectedRoutes = createRouteMatcher([
   '/cover-letter(.*)',
   '/onboarding(.*)'
 ])
+
+// export default clerkMiddleware(async (auth, req) => {
+//   const { userId } = await auth();
+//   const url = req.nextUrl;
+//   let response = NextResponse.next();
+
+//   // Set userId as HTTP-only cookie if present
+//   if (userId) {
+//     response.cookies.set('userId', userId, {
+//       httpOnly: true,
+//       secure: process.env.NODE_ENV === 'production',
+//       sameSite: 'strict',
+//       path: '/',
+//       maxAge: 60 * 60, // 1hour
+//     });
+
+//     console.log("response.cookies: ",response.cookies)
+//   }
+
+//   // Redirect for root '/' route
+//   if (url.pathname === '/') {
+//     if (userId) {
+//       response = NextResponse.redirect(new URL('/dashboard', req.url));
+//     } else {
+//       response = NextResponse.redirect(new URL('/landing', req.url));
+//     }
+//     // Copy cookies to the redirect response
+//     response.cookies.set('userId', userId ?? '', {
+//       httpOnly: true,
+//       secure: process.env.NODE_ENV === 'production',
+//       sameSite: 'strict',
+//       path: '/',
+//       maxAge: 60 * 60 * 24 * 7, // 7 days
+//     });
+//     return response;
+//   }
+
+//   // Redirect to sign in if accessing protected routes without userId
+//   if (!userId && protectedRoutes(req)) {
+//     const { redirectToSignIn } = await auth();
+//     return redirectToSignIn();
+//   }
+
+//   // Proceed with request if no other conditions match
+//   return response;
+// });
+
+
 export default clerkMiddleware(async(auth, req )=>{
   const {userId} = await auth();
   const url = req.nextUrl;
-  const { isOnboarded } = await getUserOnboardingStatus();
+  // const { isOnboarded } = await getUserOnboardingStatus();
 
   // Redirect for the root route '/'
   if (url.pathname === '/') {
@@ -24,15 +72,6 @@ export default clerkMiddleware(async(auth, req )=>{
     return NextResponse.redirect(new URL('/dashboard', req.url));
   }
 
-  // If not onboarded and not already on onboarding, redirect to onboarding
-  if (!isOnboarded && !url.pathname.startsWith('/onboarding')) {
-    return NextResponse.redirect(new URL('/onboarding', req.url));
-  }
-
-  // If onboarded and on onboarding route, redirect to dashboard
-  if (isOnboarded && url.pathname.startsWith('/onboarding')) {
-    return NextResponse.redirect(new URL('/dashboard', req.url));
-  }
 
   if(!userId && protectedRoutes(req)){
     const {redirectToSignIn} = await auth();
