@@ -23,7 +23,7 @@
 Zenai delivers a comprehensive career coaching experience by integrating multiple functionalities into one platform:
 
 - **Industry Insights Dashboard:** Get up-to-date information on salary ranges, growth rates, market trends, and in-demand skills tailored to your industry.
-- **Interview Preparation:** Practice with curated, MCQ-based mock questions and track your performance through intuitive analytics. _(Feature coming soon)_
+- **Interview Preparation:** Practice with curated, MCQ-based mock questions and track your performance through intuitive analytics.
 - **AI-Powered Resume Builder:** Craft optimized, ATS-friendly resumes with AI suggestions.
 - **AI-Powered Cover Letter Generator:** Generate personalized cover letters for specific companies and roles, ensuring a better match with job requirements.
 - **Streamlined Onboarding:** Enjoy a smooth onboarding experience that gets you started quickly.
@@ -36,7 +36,7 @@ Zenai delivers a comprehensive career coaching experience by integrating multipl
   Dive deep into salary ranges, market growth, and trends with regularly updated data.
 
 - **Mock Interview Prep:**  
-  Prepare for interviews with practice questions (MCQ-based) and track your progress visually. _(Upcoming)_
+  Prepare for interviews with practice questions (MCQ-based) and track your progress visually.
 
 - **Resume Builder:**  
   Create ATS-optimized resumes with the help of AI, including real-time feedback and scoring.
