@@ -8,12 +8,6 @@ import { industries } from '@/data/industries';
 import { getUserOnboardingStatus } from '@/actions/user';
 
 const OnbardingPage = async() => {
-  // //Check if user is already onboarded
-  // const cookieStore = await cookies();
-  // const onboardedCookie = cookieStore.get('isOnboarded')?.value;
-  
-  //   // If cookie is present and true, no need to check DB
-  //   if (onboardedCookie === 'true') {redirect('/dashboard')}
   const {isOnboarded} = await getUserOnboardingStatus();
   if(isOnboarded) {redirect('/dashboard')}
   return (
