@@ -1,9 +1,16 @@
-import React from 'react'
+import CustomLoader from '@/components/CustomLoader'
+import React, { Suspense } from 'react'
 
-const AppLayout = async ({children}:{children:React.ReactNode}) => {
+function ResumeLayout({children}:{children:React.ReactNode}) {
   return (
-    <div className='container mx-auto mt-20 mb-12'>{children}</div>
+    <div className='px-5'>
+    <div>
+        <Suspense fallback={<CustomLoader />}>
+            {children}
+        </Suspense>
+    </div>
+    </div>
   )
 }
 
-export default AppLayout
+export default ResumeLayout
