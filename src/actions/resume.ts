@@ -33,7 +33,15 @@ export async function getResume() {
         return resume;
     } catch (error) {
         console.error("Error Fetching resume:", error);
-    throw new Error("Failed to Fetch resume : " + (error as Error).message);
+        return {
+            userId: "",
+    id: "string",
+    createdAt: Date.now(),
+    updatedAt: Date,
+    content: "",
+    atsScore: 0,
+    feedback: ""
+        }
     }
 }
 

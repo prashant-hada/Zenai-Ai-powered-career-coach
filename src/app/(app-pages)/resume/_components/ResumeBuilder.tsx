@@ -1,16 +1,17 @@
-"use client  ";
+"use client";
 import { Button } from "@/components/ui/button";
 import { Download, Save } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { contactSchema, resumeSchema } from "@/schema/resumeSchema";
 import useFetch from "@/hooks/useFetch";
 import { saveResume } from "@/actions/resume";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 
-const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
+const ResumeBuilder = ({ initialContent }: { initialContent?: string }) => {
   const [activeTab, setActiveTab] = useState("edit");
 
   const {
@@ -55,30 +56,31 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
         <h1 className="font-bold gradient-title text-5xl md:text-6xl">
           Resume Builder
         </h1>
-      </div>
       <div className=" space-x-2">
-        <Button variant={"destructive"}>
-          <Save className="h-4 w-4" />
-          Save
+        <Button variant={'outline'}>
+          <Save className="h-4 w-4 text-purple-600" />
+          <span className=" text-purple-600">Save</span>
         </Button>
         <Button>
           <Download className="h-4 w-4" />
           Download PDF
         </Button>
       </div>
+      </div>
 
       <Tabs defaultValue={activeTab}>
         <TabsList>
           <TabsTrigger value="edit" onClick={() => setActiveTab("edit")}>
-            Account
+            Edit
           </TabsTrigger>
           <TabsTrigger value="preview" onClick={() => setActiveTab("preview")}>
-            Password
+            Preview
           </TabsTrigger>
         </TabsList>
         <TabsContent value="edit">
           <form>
-            <div className="">
+            <div className="space-y-6 pt-4">
+            <div className="space-y-2">
               <h3 className="text-lg font-medium">Contact Information</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 border rounded-lg bg-muted/50">
                 <div className="space-y-2">
@@ -94,7 +96,90 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
                     </p>
                   )}
                 </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Mobile Number</label>
+                  <Input
+                    {...register("contactInfo.mobile")}
+                    type="tel"
+                    placeholder="+91 7412856965"
+                  />
+                  {typeof errors.contactInfo?.mobile === "string" && (
+                    <p className="text-sm text-red-500 font-medium">
+                      {errors.contactInfo?.mobile}
+                    </p>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">LinkedIn Profile</label>
+                  <Input
+                    {...register("contactInfo.linkedIn")}
+                    type="url"
+                    placeholder="https://linkedin.com/your-profile"
+                  />
+                  {typeof errors.contactInfo?.linkedIn === "string" && (
+                    <p className="text-sm text-red-500 font-medium">
+                      {errors.contactInfo?.linkedIn}
+                    </p>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">X Profile</label>
+                  <Input
+                    {...register("contactInfo.twitter")}
+                    type="url"
+                    placeholder="https://x.com/your-handle"
+                  />
+                  {typeof errors.contactInfo?.twitter === "string" && (
+                    <p className="text-sm text-red-500 font-medium">
+                      {errors.contactInfo?.twitter}
+                    </p>
+                  )}
+                </div>
               </div>
+            </div>
+
+            <div className="space-y-2">
+              <h3 className="text-lg font-medium">Professional Summary</h3>
+              <Controller
+                name="summary"
+                control={control}
+                render={({ field }) => (
+                  <Textarea
+                    {...field}
+                    className="h-32"
+                    placeholder="Write a compelling professional summary..."
+                  />
+                )}
+              />
+              {typeof errors.summary === "string" && (
+                    <p className="text-sm text-red-500 font-medium">
+                      {errors.summary}
+                    </p>
+                  )}
+            </div>
+
+            <div className="space-y-2">
+              <h3 className="text-lg font-medium">Skills</h3>
+              <Controller
+                name="skills"
+                control={control}
+                render={({ field }) => (
+                  <Textarea
+                    {...field}
+                    className="h-32"
+                    placeholder="Write a compelling professional summary..."
+                  />
+                )}
+              />
+              {typeof errors.skills === "string" && (
+                    <p className="text-sm text-red-500 font-medium">
+                      {errors.skills}
+                    </p>
+                  )}
+            </div>
             </div>
           </form>
         </TabsContent>
