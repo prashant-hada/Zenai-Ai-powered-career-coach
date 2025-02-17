@@ -1,6 +1,6 @@
 # Zenai
 
-**Zenai** is a next-generation AI-powered career coach platform designed to help users excel in their careers. By providing tailored industry insights, dynamic market trends, and AI-assisted tools for resume and cover letter creation, Zenai empowers professionals to stay ahead in today’s competitive job market.
+**Zenai** is  a next-generation AI-powered career coach platform designed to help users excel in their careers. By providing tailored industry insights, dynamic market trends, and AI-assisted tools for resume and cover letter creation, Zenai empowers professionals to stay ahead in today’s competitive job market.
 
 ---
 
