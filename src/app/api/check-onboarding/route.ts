@@ -16,7 +16,7 @@ export async function GET() {
         const response = NextResponse.json({ isOnboarded: true });
         console.log("funtion mid4...................................")
         response.cookies.set('isOnboarded', 'true', { maxAge: 60 * 60});
-        console.log("funtion end...................................")
+
         return response;
     }
     console.log("funtion end DDDD...................................")

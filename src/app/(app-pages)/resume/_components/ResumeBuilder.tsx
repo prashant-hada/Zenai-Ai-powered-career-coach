@@ -5,11 +5,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { contactSchema, resumeSchema } from "@/schema/resumeSchema";
+import {  resumeSchema } from "@/schema/resumeSchema";
 import useFetch from "@/hooks/useFetch";
 import { saveResume } from "@/actions/resume";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import EntryForm from "./EntryForm";
 
 const ResumeBuilder = ({ initialContent }: { initialContent?: string }) => {
   const [activeTab, setActiveTab] = useState("edit");
@@ -46,6 +47,10 @@ const ResumeBuilder = ({ initialContent }: { initialContent?: string }) => {
 
   const formValues = watch();
 
+  const onSubmitFn = async(data)=>{
+
+  }
+
   useEffect(() => {
     if (initialContent) setActiveTab("preview");
   }, [initialContent]);
@@ -78,9 +83,10 @@ const ResumeBuilder = ({ initialContent }: { initialContent?: string }) => {
           </TabsTrigger>
         </TabsList>
         <TabsContent value="edit">
-          <form>
-            <div className="space-y-6 pt-4">
-            <div className="space-y-2">
+          <form onSubmit={handleSubmit(onSubmitFn)}>
+            <div className="space-y-8 pt-4">
+              {/* Contact Info Section */}
+            <div className="space-y-2 ">
               <h3 className="text-lg font-medium">Contact Information</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 border rounded-lg bg-muted/50">
                 <div className="space-y-2">
@@ -140,7 +146,7 @@ const ResumeBuilder = ({ initialContent }: { initialContent?: string }) => {
                 </div>
               </div>
             </div>
-
+                  {/* Summary */}
             <div className="space-y-2">
               <h3 className="text-lg font-medium">Professional Summary</h3>
               <Controller
@@ -161,6 +167,7 @@ const ResumeBuilder = ({ initialContent }: { initialContent?: string }) => {
                   )}
             </div>
 
+            {/* Skills */}
             <div className="space-y-2">
               <h3 className="text-lg font-medium">Skills</h3>
               <Controller
@@ -180,6 +187,69 @@ const ResumeBuilder = ({ initialContent }: { initialContent?: string }) => {
                     </p>
                   )}
             </div>
+
+            <div className="space-y-2">
+              <h3 className="text-lg font-medium">Work Experience</h3>
+              <Controller
+                name="experience"
+                control={control}
+                render={({ field }) => (
+                  <EntryForm
+                  type='Experience'
+                  entries={field.value}
+                  onChange={field.onChange}
+                 />
+                )}
+              />
+              {typeof errors.experience === "string" && (
+                    <p className="text-sm text-red-500 font-medium">
+                      {errors.experience}
+                    </p>
+                  )}
+            </div>
+
+
+            <div className="space-y-2">
+              <h3 className="text-lg font-medium">Education</h3>
+              <Controller
+                name="education"
+                control={control}
+                render={({ field }) => (
+                  <EntryForm
+                  type='Education'
+                  entries={field.value}
+                  onChange={field.onChange}
+                 />
+                )}
+              />
+              {typeof errors.education === "string" && (
+                    <p className="text-sm text-red-500 font-medium">
+                      {errors.education}
+                    </p>
+                  )}
+            </div>
+
+
+            <div className="space-y-2">
+              <h3 className="text-lg font-medium">Projects</h3>
+              <Controller
+                name="projects"
+                control={control}
+                render={({ field }) => (
+                 <EntryForm
+                  type='Projects'
+                  entries={field.value}
+                  onChange={field.onChange}
+                 />
+                )}
+              />
+              {typeof errors.projects === "string" && (
+                    <p className="text-sm text-red-500 font-medium">
+                      {errors.projects}
+                    </p>
+                  )}
+            </div>
+
             </div>
           </form>
         </TabsContent>
