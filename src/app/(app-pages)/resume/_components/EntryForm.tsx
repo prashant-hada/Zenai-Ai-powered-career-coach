@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button';
 import { resumeSchema } from '@/schema/resumeSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2, Plus, Sparkles } from 'lucide-react';
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form';
 import {
   Card,
@@ -67,6 +67,17 @@ const EntryForm = ({type, entries, onChange}) => {
         )
       }
 
+      useEffect(()=>{
+        if(improvedContent && !isImproving){
+          setValue('description', improvedContent);
+          toast.success('Description updated succesfully!');
+        }
+        
+        if(improveWithAiError){
+          toast.error( improveWithAiError.message ||'Failed to Improve description.')
+        }
+      },[isImproving, improvedContent, improveWithAiError, setValue])
+       
   return (
     <div className='space-y-4'>
       {isAdding && (
@@ -166,7 +177,7 @@ const EntryForm = ({type, entries, onChange}) => {
               </>
             ): (
               <>
-                <Sparkles className='h-4 w-4 mr-1 text-purple-600 font-extrabold animate-spin' />
+                <Sparkles className='h-4 w-4 mr-1 text-purple-600 font-extrabold' />
                 <span className='text-purple-600 mr-1 font-semibold'>Improve with AI</span>
               </>
             )}
