@@ -1,8 +1,8 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { Download, Save } from "lucide-react";
+import { AlertTriangle, Download, Edit, File, Loader2, Save } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {  resumeSchema } from "@/schema/resumeSchema";
@@ -11,9 +11,20 @@ import { saveResume } from "@/actions/resume";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import EntryForm from "./EntryForm";
+import entriesToMarkDown from "@/utils/markdown";
+import { useUser } from "@clerk/nextjs";
+import html2pdf from "html2pdf.js";
+import MDEditor, { image } from '@uiw/react-md-editor'
+import { err } from "inngest/types";
+import { toast } from "sonner";
 
 const ResumeBuilder = ({ initialContent }: { initialContent?: string }) => {
   const [activeTab, setActiveTab] = useState("edit");
+  const [resumePreviewMode, setResumePreviewMode] = useState(true);
+  const [previewContent, setPreviewContent] = useState(initialContent);
+  const { user } = useUser();
+  // const [resumeMode, setResumeMode] = useState("preview");
+  const [isGenerating, setIsGenerating] = useState(false)
 
   const {
     control,
@@ -47,13 +58,74 @@ const ResumeBuilder = ({ initialContent }: { initialContent?: string }) => {
 
   const formValues = watch();
 
-  const onSubmitFn = async(data)=>{
+  const onSubmitFn = async()=>{
 
   }
 
+  const getContactMarkdown = useCallback(() => {
+    const { contactInfo } = formValues;
+    const parts = [];
+    if (contactInfo.email) parts.push(`📧 ${contactInfo.email}`);
+    if (contactInfo.mobile) parts.push(`📱 ${contactInfo.mobile}`);
+    if (contactInfo.linkedIn)
+      parts.push(`💼 [LinkedIn](${contactInfo.linkedIn})`);
+    if (contactInfo.twitter) parts.push(`🐦 [Twitter](${contactInfo.twitter})`);
+
+    return parts.length > 0
+      ? `## <div align="center">${user?.fullName}</div>
+        \n\n<div align="center">\n\n${parts.join(" | ")}\n\n</div>`
+      : "";
+  }, [formValues, user?.fullName])
+
+  const getCombinedContent = useCallback(()=>{
+    const {summary, experience, skills, projects, education} = formValues;
+
+    return [
+      getContactMarkdown(),
+      summary && `## Professional Summary\n\n${summary}`,
+      skills && `## Skills\n\n${skills}`,
+      entriesToMarkDown(experience, 'Work Experience'),
+      entriesToMarkDown(education, 'Education'),
+      entriesToMarkDown(projects, 'Projects'),
+    ].filter(Boolean)
+    .join("\n\n");
+  }, [formValues, getContactMarkdown])
+
+  const generatePDF = async()=>{
+    setIsGenerating(true);
+    try {
+      const resumeElement = document.getElementById('resume-pdf');
+      // const options = {
+      //   margin:[15,15],
+      //   filename: `${user?.fullName ? user.firstName:''}-resume.pdf`,
+      //   image:{type:'jpeg', quality: 0.98},
+      //   html2canvas
+      // }
+    } catch (error) {
+      console.error('PDF generation error: ', error);
+      toast.error((error as Error).message || 'Some went wrong while generting PDF' )
+      
+    }
+    finally{
+       setIsGenerating(false)
+    }
+
+  }
+
+  //Sets the initial content in the resume preview if we have a resume in DB corresponding to the user
   useEffect(() => {
     if (initialContent) setActiveTab("preview");
   }, [initialContent]);
+
+  //updates form content whenever the value changes or tabs switch
+  useEffect(()=>{
+    if(activeTab == 'edit'){
+      const newContent = getCombinedContent();
+      setPreviewContent(prev=> (newContent? newContent: prev))
+    }
+  },[formValues, activeTab, getCombinedContent]) 
+
+
 
   return (
     <div className="space-y-4">
@@ -66,9 +138,18 @@ const ResumeBuilder = ({ initialContent }: { initialContent?: string }) => {
           <Save className="h-4 w-4 text-purple-600" />
           <span className=" text-purple-600">Save</span>
         </Button>
-        <Button>
-          <Download className="h-4 w-4" />
-          Download PDF
+        <Button onClick={generatePDF} disabled={isGenerating}>
+          {isGenerating?(
+            <>
+            <Loader2 className="h-4 w-4" />
+            Generating PDF...
+            </>
+          ):(
+            <>
+            <Download className="h-4 w-4" />
+            Download PDF
+            </>
+          )}
         </Button>
       </div>
       </div>
@@ -188,6 +269,7 @@ const ResumeBuilder = ({ initialContent }: { initialContent?: string }) => {
                   )}
             </div>
 
+{/* Work Experience Section */}
             <div className="space-y-2">
               <h3 className="text-lg font-medium">Work Experience</h3>
               <Controller
@@ -208,7 +290,7 @@ const ResumeBuilder = ({ initialContent }: { initialContent?: string }) => {
                   )}
             </div>
 
-
+{/* Education Section */}
             <div className="space-y-2">
               <h3 className="text-lg font-medium">Education</h3>
               <Controller
@@ -229,7 +311,7 @@ const ResumeBuilder = ({ initialContent }: { initialContent?: string }) => {
                   )}
             </div>
 
-
+{/* Projects Section */}
             <div className="space-y-2">
               <h3 className="text-lg font-medium">Projects</h3>
               <Controller
@@ -253,7 +335,57 @@ const ResumeBuilder = ({ initialContent }: { initialContent?: string }) => {
             </div>
           </form>
         </TabsContent>
-        <TabsContent value="preview">Change your password here.</TabsContent>
+        <TabsContent value="preview">
+          <Button
+          variant={'link'} 
+          type="button"
+          className="mb-2" 
+          onClick={()=> setResumePreviewMode(prev=>!prev)}
+          >
+            {resumePreviewMode ? 
+            <>
+            <Edit className="h-4 w-4 mr-1" />
+            Edit Resume
+            </>
+            :<>
+            <File className="h-4 w-4 mr-1" />
+            Show Preview
+            </>
+            }
+          </Button>
+
+          {!resumePreviewMode && (
+            <div className="flex p-3 gap-2 items-center border-2 border-yellow-600 text-yellow-600 rounded mb-2">
+              <AlertTriangle className="h-4 w-4" />
+              <span className="text-sm">
+                You will lose edited markdown progress if you update the form
+              </span>
+            </div>
+          )}
+
+          <div className=" border rounded-lg">
+            <MDEditor
+            value={previewContent}
+            onChange={setPreviewContent}
+            height={800}
+            preview={resumePreviewMode? 'preview': 'edit'} />
+          </div>
+
+          <div className="hidden">
+            <div id='resume-pdf'>
+            <div className=" border rounded-lg">
+            <MDEditor.Markdown
+            source={previewContent}
+            style={{
+              background:'white',
+              color: 'black',
+            }}
+            />
+          </div>
+            </div>
+          </div>
+
+        </TabsContent>
       </Tabs>
     </div>
   );
