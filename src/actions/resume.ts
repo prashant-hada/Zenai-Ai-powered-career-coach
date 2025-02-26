@@ -45,8 +45,11 @@ export async function getResume() {
     }
 }
 
-export async function saveResume(content: string) {
+export async function saveResume(content: string | undefined) {
     try {
+        if(!content){
+            throw new Error('Content is invalid');
+        }
         const {userId} = await auth();
         if (!userId) throw new Error("Unauthorized");
 

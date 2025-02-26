@@ -14,8 +14,7 @@ import EntryForm from "./EntryForm";
 import entriesToMarkDown from "@/utils/markdown";
 import { useUser } from "@clerk/nextjs";
 import html2pdf from "html2pdf.js";
-import MDEditor, { image } from '@uiw/react-md-editor'
-import { err } from "inngest/types";
+import MDEditor from '@uiw/react-md-editor'
 import { toast } from "sonner";
 
 const ResumeBuilder = ({ initialContent }: { initialContent?: string }) => {
@@ -59,8 +58,20 @@ const ResumeBuilder = ({ initialContent }: { initialContent?: string }) => {
   const formValues = watch();
 
   const onSubmitFn = async()=>{
-
+      try {
+        await saveResumeFn(previewContent);
+      } catch (error) {
+        console.error('Error in Saving Resume', error);
+      }
   }
+
+  function toTitleCase(str:string) {
+    return str.replace(
+      /\w\S*/g,
+      text => text.charAt(0).toUpperCase() + text.substring(1).toLowerCase()
+    );
+  }
+  
 
   const getContactMarkdown = useCallback(() => {
     const { contactInfo } = formValues;
@@ -72,7 +83,7 @@ const ResumeBuilder = ({ initialContent }: { initialContent?: string }) => {
     if (contactInfo.twitter) parts.push(`🐦 [Twitter](${contactInfo.twitter})`);
 
     return parts.length > 0
-      ? `## <div align="center">${user?.fullName}</div>
+      ? `## <div align="center">${toTitleCase(user?.fullName || "")}</div>
         \n\n<div align="center">\n\n${parts.join(" | ")}\n\n</div>`
       : "";
   }, [formValues, user?.fullName])
@@ -95,12 +106,16 @@ const ResumeBuilder = ({ initialContent }: { initialContent?: string }) => {
     setIsGenerating(true);
     try {
       const resumeElement = document.getElementById('resume-pdf');
-      // const options = {
-      //   margin:[15,15],
-      //   filename: `${user?.fullName ? user.firstName:''}-resume.pdf`,
-      //   image:{type:'jpeg', quality: 0.98},
-      //   html2canvas
-      // }
+      const options = {
+        margin:[15,15],
+        filename: `${user?.fullName ? user.firstName:''}-resume.pdf`,
+        image:{type:'jpeg', quality: 0.98},
+        html2canvas:{scale:2},
+        jsPDF :{unit:'mm', format: 'a4', orientation: 'portrait'},
+      }
+      await html2pdf().set(options).from(resumeElement).save();
+
+      toast.success('Your Resume will be downloaded soon.')
     } catch (error) {
       console.error('PDF generation error: ', error);
       toast.error((error as Error).message || 'Some went wrong while generting PDF' )
@@ -111,6 +126,17 @@ const ResumeBuilder = ({ initialContent }: { initialContent?: string }) => {
     }
 
   }
+
+  //UseEffect to save resume content in DB
+  useEffect(()=>{
+    if(saveResult && !isSaving){
+      toast.success('Resume save successfully!');
+    }
+
+    if(saveError){
+      toast.error(saveError.message || "Failed to save the resume")
+    }
+  },[saveResult, saveError, isSaving])
 
   //Sets the initial content in the resume preview if we have a resume in DB corresponding to the user
   useEffect(() => {
@@ -134,9 +160,18 @@ const ResumeBuilder = ({ initialContent }: { initialContent?: string }) => {
           Resume Builder
         </h1>
       <div className=" space-x-2">
-        <Button variant={'outline'}>
-          <Save className="h-4 w-4 text-purple-600" />
-          <span className=" text-purple-600">Save</span>
+        <Button variant={'outline'} disabled={isSaving} >
+        {isSaving?(
+            <>
+            <Loader2 className="h-4 w-4 text-purple-600" />
+          <span className=" text-purple-600">Saving</span>
+            </>
+          ):(
+            <>
+            <Save className="h-4 w-4 text-purple-600" />
+            <span className=" text-purple-600">Save</span>
+            </>
+          )}
         </Button>
         <Button onClick={generatePDF} disabled={isGenerating}>
           {isGenerating?(
@@ -344,18 +379,18 @@ const ResumeBuilder = ({ initialContent }: { initialContent?: string }) => {
           >
             {resumePreviewMode ? 
             <>
-            <Edit className="h-4 w-4 mr-1" />
+            <Edit className="h-4 w-4" />
             Edit Resume
             </>
             :<>
-            <File className="h-4 w-4 mr-1" />
+            <File className="h-4 w-4" />
             Show Preview
             </>
             }
           </Button>
 
           {!resumePreviewMode && (
-            <div className="flex p-3 gap-2 items-center border-2 border-yellow-600 text-yellow-600 rounded mb-2">
+            <div className="flex p-3 gap-2 items-center border-2 border-yellow-500 text-yellow-500 rounded mb-2">
               <AlertTriangle className="h-4 w-4" />
               <span className="text-sm">
                 You will lose edited markdown progress if you update the form

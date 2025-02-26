@@ -19,7 +19,11 @@ import { toast } from "sonner";
 import formatDisplayDate from "@/utils/dateFunction";
 import { Entry } from "@/types/Entry";
 
-const EntryForm = ({ type, entries, onChange }) => {
+interface EntryFormProps {
+  type:string, entries:Entry[], onChange:(values: Entry[])=> void
+}
+
+const EntryForm = ({ type, entries, onChange }: EntryFormProps) => {
   const [isAdding, setisAdding] = useState(false);
   const {
     // control,
