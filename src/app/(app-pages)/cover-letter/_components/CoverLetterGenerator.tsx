@@ -1,20 +1,20 @@
 'use client'
 import { Input } from '@/components/ui/input'
-// import { coverletterSchema } from '@/schema/coverletterSchema'
-// import { zodResolver } from '@hookform/resolvers/zod'
+import { coverletterSchema } from '@/schema/coverletterSchema'
+import { zodResolver } from '@hookform/resolvers/zod'
 import React from 'react'
-// import { useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 
 const CoverLetterGenerator = () => {
 
-    // const {register, handleSubmit, formState: {errors}, watch} =useForm({
-    //     resolver:zodResolver(coverletterSchema),
-    //     defaultValues:{
-    //         companyName: '',
-    //         jobTitle: '',
-    //         description: '', 
-    //     }
-    // })
+    const {register, handleSubmit, formState: {errors}, watch} =useForm({
+        resolver:zodResolver(coverletterSchema),
+        defaultValues:{
+            companyName: '',
+            jobTitle: '',
+            description: '', 
+        }
+    })
   return (
     <div className=''>
         <div>
