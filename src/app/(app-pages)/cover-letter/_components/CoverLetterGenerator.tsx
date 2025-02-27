@@ -7,7 +7,13 @@ import { useForm } from 'react-hook-form'
 
 const CoverLetterGenerator = () => {
 
-    const {register, handleSubmit, formState: {errors}, watch} =useForm({
+    const {
+        // register, 
+        // handleSubmit, 
+        // formState: {errors}, 
+        // watch
+    }
+         =useForm({
         resolver:zodResolver(coverletterSchema),
         defaultValues:{
             companyName: '',
