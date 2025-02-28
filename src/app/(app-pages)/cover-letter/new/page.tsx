@@ -21,7 +21,7 @@ const NewCoverLetter = () => {
         <div className="">
           <CoverLetterGenerator />
         </div>
-      </div>
+    </div>
   )
 }
 
